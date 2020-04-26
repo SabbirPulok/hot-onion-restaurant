@@ -15,6 +15,7 @@ import Login from './Components/Auth/Login/Login';
 import Checkout from './Components/Checkout/Checkout';
 import OrderDone from './Components/OrderDone/OrderDone';
 import Search from './Components/Search/Search';
+import NotFound from './Components/NotFound/NotFound';
 
 
 function App() {
@@ -93,6 +94,11 @@ function App() {
             <OrderDone deliveryAddress={deliveryAddress}></OrderDone>
             <Footer></Footer>
           </PrivateRoute>
+          <Route path="*">
+              <Header cart={cart}></Header>
+              <NotFound></NotFound>
+              <Footer></Footer>
+          </Route>
         </Switch>
        </Router>
       </AuthContextProvider>
