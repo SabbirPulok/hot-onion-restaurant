@@ -1,0 +1,9 @@
+.search-border::after
+{
+    content:"";
+    margin-left:40px;
+    margin-top:7px;
+    width:60px;
+    display:block;
+    border-bottom:3px solid red;
+}

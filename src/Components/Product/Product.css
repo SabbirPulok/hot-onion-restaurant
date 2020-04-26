@@ -1,0 +1,16 @@
+nav li
+{
+    color:black;
+    font-weight: 600;
+    cursor:pointer;
+}
+nav li .active
+{
+    color:red;
+    font-weight: 700;
+    border-bottom: 2px solid red;
+}
+.spacing
+{
+    margin:35px 0px;
+}

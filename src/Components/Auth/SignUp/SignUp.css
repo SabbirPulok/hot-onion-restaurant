@@ -1,0 +1,33 @@
+
+*{
+    box-sizing: border-box!important;
+}
+.SignUp{
+    background-image: url(../../../images/homepage/signup-bg.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: bottom;
+    height: calc(88vh);
+    box-sizing: content-box;
+    margin-top: 90px;
+}
+.SignUp .logo img{
+    height: 80px;
+}
+.SignUp  form{
+    max-width: 400px;
+    margin: 0 auto;
+}
+.SignUp .form-control{
+    background:#f5f5f5;
+    border:none;
+    padding: 25px 15px !important;
+}
+.error{
+    color: red;
+}
+
+.sign-up .option label{
+    color: red;
+    cursor: pointer;
+}

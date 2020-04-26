@@ -1,0 +1,19 @@
+footer
+{
+    
+}
+footer li
+{
+    color:lightgray;
+    display: block;
+    line-height:2;
+}
+footer li a
+{
+    text-decoration: none;
+    color:lightgray;
+}
+footer li a:hover
+{
+    color:gray;
+}

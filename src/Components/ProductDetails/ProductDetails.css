@@ -1,0 +1,48 @@
+.cart
+{
+    border-radius: 25px;
+    border: 1px solid lightgrey;
+}
+.cart .btn
+{
+    font-size: 20px;
+    line-height: 30px;
+    padding: 0 10px !important;
+}
+.add-cart-btn
+{
+    border-radius: 25px;
+    width:90px;
+}
+.small-img
+{
+    cursor:pointer;
+    padding:5px;
+    border: 1px solid lightgray;
+}
+.small-img:hover:active
+{
+    opacity:0.7;
+}
+.success-msg
+{
+    animation: show-hide 2s ease-in-out  1 forwards;
+    font-style: italic;
+    color:white;
+    border-radius: 5px;
+    padding: 3px;
+}
+@keyframes show-hide{
+    0%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 1;
+    }
+    75%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
