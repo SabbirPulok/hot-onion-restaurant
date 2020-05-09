@@ -16,13 +16,14 @@ import Checkout from './Components/Checkout/Checkout';
 import OrderDone from './Components/OrderDone/OrderDone';
 import Search from './Components/Search/Search';
 import NotFound from './Components/NotFound/NotFound';
+import AddProduct from './Components/AddProduct/AddProduct';
 
 
 function App() {
   const [cart,setCart] = useState([]);
-  
-  const handleCart = (addCart) => {
-    
+  const [order,setOrder] = useState(null);
+
+  const handleCart = (addCart) => {  
     const isAddedAlready = cart.find( pd=> pd.key === addCart.key);
     const newCart = [...cart, addCart];
     if(!isAddedAlready)
@@ -52,8 +53,36 @@ function App() {
     setCart(notZeroQuantity);
   }
 
-  const clearCart = () => setCart([]);
-
+  const handlePlaceOrder = (payment,cost,user)=>{
+    const savedCart = cart.map(item=>{
+      return{
+      key:item.key,
+      title:item.title,
+      price:item.price,
+      qty:item.quantity}
+    })
+    const order = {
+        user,
+        cart: savedCart,
+        deliveryAddress,
+        cost,
+        payment
+    }
+    console.log("App.js",order);
+    fetch('http://localhost:4000/placeOrder', {
+    method: 'POST',
+    body: JSON.stringify(order),
+    headers: {
+        "Content-type": "application/json; charset=UTF-8"
+    }
+    })
+    .then(res => res.json())
+    .then(order => {
+        setOrder(order);
+        setCart([]);
+    })
+}
+    
   return (
     <div className="base">
       <AuthContextProvider>  
@@ -86,14 +115,17 @@ function App() {
           </Route>
           <PrivateRoute path="/checkout">
             <Header cart = {cart}></Header>
-            <Checkout cart={cart} handleUpdateCart={handleUpdateCart} deliveryAddress={deliveryAddress} handleDeliveryAddress={handleDeliveryAddress} clearCart={clearCart}></Checkout>
+            <Checkout cart={cart} handleUpdateCart={handleUpdateCart} deliveryAddress={deliveryAddress} handleDeliveryAddress={handleDeliveryAddress} handlePlaceOrder={handlePlaceOrder}></Checkout>
             <Footer></Footer>
           </PrivateRoute>
           <PrivateRoute path="/order-done">
             <Header cart = {cart}></Header>
-            <OrderDone deliveryAddress={deliveryAddress}></OrderDone>
+            <OrderDone order={order} deliveryAddress={deliveryAddress}></OrderDone>
             <Footer></Footer>
           </PrivateRoute>
+          <Route path="/addProduct">
+              <AddProduct></AddProduct>
+          </Route>
           <Route path="*">
               <Header cart={cart}></Header>
               <NotFound></NotFound>

@@ -1,13 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useForm} from 'react-hook-form';
-import thanks from "../../images/homepage/giphy.gif";
 import { Link } from 'react-router-dom';
+import {
+    CardElement,
+    Elements,
+    useStripe,
+    useElements,
+  } from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
 import './Checkout.css';
+import Payment from '../Payment/Payment';
+import { useAuth } from '../Auth/useAuth';
+
+const stripePromise = loadStripe('pk_test_OQEBRgJoKCwrP4nH7ootWy3d004lm2Cs5f');
+
 const Checkout = (props) => {
+    const auth =useAuth();
     const {businessName, contactNo, flat, roadNo, address} = props.deliveryAddress;
     const { register, handleSubmit, errors } = useForm();
     const [savedBtn, setSavedBtn] = useState(false);
+    const [payment, setPayment] = useState(null);
 
+    const user = {
+        username: auth.user.name,
+        email: auth.user.email
+    };
+    console.log(user);
     const submitDeliveryAddress = data => {
         props.handleDeliveryAddress(data);
         setSavedBtn(true);   
@@ -23,14 +41,24 @@ const Checkout = (props) => {
     const deliveryFee = totalQty && 2;
     const total = (subTotal+tax+deliveryFee);
 
+    const cost = {tax,deliveryFee, totalAmount:total};
+
+    const handlePayment = (payment) => {
+        setPayment(payment);
+    }
+    useEffect(()=>{
+        window.scrollTo(0, 0);
+    },[])
     return (
         <div className="container pt-5 my-5">
             <div className="row mt-5">
                 {/* Delivery Information display:(contactNo && flat && roadNo && address && businessName)*/}
                 <div className="col-md-5">
                     <div style={{display:(contactNo && flat && roadNo && address && businessName) ? "block":"none"}} className="bgThanks">
-                        <h4 className="bg-danger p-2">Thanks! Your delivery information submitted successfully. Please proceed to checkout to get the delivery on your address.</h4>
-                        <img src={thanks} className="w-100" alt=""/>
+                        <h3>Payment Information</h3>
+                        <Elements stripe={stripePromise}>
+                            <Payment handlePayment={handlePayment}></Payment> 
+                        </Elements>
                     </div>
 
                     <div style={{display:(contactNo && flat && roadNo && address && businessName) ? "none":"block"}}>
@@ -111,9 +139,12 @@ const Checkout = (props) => {
                         {
                             (totalQty) ?
                                 (savedBtn)?
-                                    <Link to="/order-done">
-                                        <button onClick={()=>props.clearCart()}className="btn btn-block btn-danger btn-secondary">Check Out Your Food</button>
-                                    </Link>
+                                    (payment)?
+                                        <Link to={"/order-done"}>
+                                            <button onClick={()=>props.handlePlaceOrder(payment,cost,user)} className="btn btn-block btn-danger btn-secondary">Check Out Your Food</button>
+                                        </Link>
+                                    :
+                                    <button disabled className="btn btn-block btn-secondary">Complete your payment</button>
                                 :
                                 <button disabled className="btn btn-block btn-secondary">Provide the Delivery Details</button>
                             :

@@ -1,15 +1,26 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import './Product.css';
-import foodsInfo from '../foodsInfo';
 import ProductItems from '../ProductItems/ProductItems';
 import { Link } from 'react-router-dom';
-const Product = (props) => {
+import LoaderSpinner from '../LoaderSpinner/LoaderSpinner';
 
-    const food = [...foodsInfo];
+const Product = (props) => {
     const [selectedFood, setSelectedFood] = useState("lunch");
-    const foodChoice = food.filter(fd => fd.type === selectedFood);
-    //console.log(foodChoice);
-    
+    const [food,setFood] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(()=>{
+        fetch("http://localhost:4000/products/"+selectedFood)
+        .then(res=>res.json())
+        .then(data=>{
+            setFood(data);
+            setLoading(false);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+    },[selectedFood])
+    //console.log(food);
     return (
         <section>
             <div className="container my-5">
@@ -27,8 +38,9 @@ const Product = (props) => {
                     </ul>
                 </nav>
                 <div className="row justify-content-around spacing">
+                    <LoaderSpinner loader={loading}></LoaderSpinner>
                     {
-                        foodChoice.map(pd => <ProductItems product={pd} key={pd.key} ></ProductItems>)
+                        food.map(pd => <ProductItems product={pd} key={pd.key} ></ProductItems>)
                     }
                 </div>
                 <div className="text-center">

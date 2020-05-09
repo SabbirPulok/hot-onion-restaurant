@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './ChooseUs.css';
-import chooseUsInfo from '../chooseUsInfo';
 import ChooseUsItems from '../ChooseUsItems/ChooseUsItems';
-
-
+import LoaderSpinner from '../LoaderSpinner/LoaderSpinner';
 
 const ChooseUs = () => {
-    const chooseUsEle = [...chooseUsInfo];
+    const [chooseUsElement, setChooseUsElement] = useState([]);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(()=>{
+        fetch('http://localhost:4000/chooseUs')
+        .then(res=>res.json())
+        .then(data=>
+            {
+                setChooseUsElement(data)
+                setLoading(false);
+            })
+        .catch(error=>{
+            console.log("error: ",error);
+        })
+    },[chooseUsElement])
+    
     return (
         <section className="choose mt-5">
             <div className="container">
@@ -18,9 +30,10 @@ const ChooseUs = () => {
                             <p className="mt-3 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui sapiente eaque repellendus asperiores nisi! Architecto, praesentium eligendi consequatur inventore.</p>
                         </div>
                     </div>
-                    <div className="row">                        
+                    <div className="row">  
+                        <LoaderSpinner loader={loading}></LoaderSpinner>
                         {
-                            chooseUsEle.map(element=><ChooseUsItems chooseUs={element} key={element.key}></ChooseUsItems>)
+                            chooseUsElement.map(element=><ChooseUsItems chooseUs={element} key={element.key}></ChooseUsItems>)
                         }
                      </div>   
                 </div>

@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import orderDone from '../../images/homepage/ordercomplete.png';
 import bike from '../../images/homepage/bike.png';
 import helmet from '../../images/homepage/helmet.png';
-import { useAuth } from '../Auth/useAuth';
+import LoaderSpinner from '../LoaderSpinner/LoaderSpinner';
 import './OrderDone.css';
 
 const OrderDone = (props) => {
-    const {contactNo,address,flat,roadNo} = props.deliveryAddress;
-    const auth = useAuth();
-    const localtime = new Date();
-    localtime.setMinutes(localtime.getMinutes()+30)
-    const deliveryTime = localtime.getHours()+":"+localtime.getMinutes();
+    const [order,setOrder]= useState(null);
+    const [loading,setLoading] = useState(true);
+    let orderPlacedAt;
+    let deliveryTime;
+    
+    useEffect(() => {
+        setOrder(props.order);
+        setLoading(false);
+        console.log("Order Done ",order);
+        window.scrollTo(0, 0);
+    }, [props])
+
+    if(order)
+    {
+        orderPlacedAt = new Date(order.placedAt);
+        const hours = orderPlacedAt.getHours()%12 || 12;
+        const ampm = orderPlacedAt.getHours()>12?"PM":"AM";
+        orderPlacedAt.setMinutes(orderPlacedAt.getMinutes()+30);
+        deliveryTime = hours+":"+orderPlacedAt.getMinutes()+ampm;
+    }
     return (
         <div className="container pt-5 my-5">
             <div className="row mt-5">
@@ -20,17 +35,27 @@ const OrderDone = (props) => {
                 <div className="offset-md-1 col-md-5">
                     <div className="bg-light p-5 rounded">
                         <img src={bike} alt="" style={{height:"110px"}} className="ml-3"/>
-                        <div className="bg-white p-3 my-3 rounded order">    
-                            <h5>Order From</h5>
-                            <p className="text-secondary">Name: {auth.user.name}</p>
-                            <h5>Your Location</h5>
-                            <p className="text-secondary">Flat:{flat}, Road:{roadNo}, Address:{address}</p>
-                            <h5>Your Contact No</h5>
-                            <p className="text-secondary">{contactNo}</p>
-                            <h5>Your Shop Address</h5>
-                            <p className="text-secondary">Gulshan Plaza Restora GPR</p>
-                        </div>    
-                        <h2>{deliveryTime}</h2>
+                        { 
+                            order ?
+                                <div className="bg-white p-3 my-3 rounded order">    
+                                    <p><b>Order No: </b>{order._id}</p>
+                                    <h5>From</h5>
+                                    <p className="text-secondary">Name: {order.user.username}</p>
+                                    <h5>Your Location</h5>
+                                    <p className="text-secondary">Flat: {order.deliveryAddress.flat}, Road: {order.deliveryAddress.roadNo}, Address: {order.deliveryAddress.address}</p>
+                                    <h5>Your Contact No</h5>
+                                    <p className="text-secondary">{order.deliveryAddress.contactNo}</p>
+                                    <h5>Your Shop Address</h5>
+                                    <p className="text-secondary">Gulshan Plaza Restora GPR</p>
+                                </div>
+                            :
+                            <LoaderSpinner loader={loading}></LoaderSpinner>
+
+                        }    
+                        {
+                            order ? <h2>{deliveryTime}</h2>
+                            : <LoaderSpinner loader={loading}></LoaderSpinner>
+                        }
                         <p className="text-secondary">Estimated Delivery Time</p>
                         <div className="bg-white rounded p-3 d-flex">
                             <img className="w-25 mr-2" src={helmet} alt=""/>
