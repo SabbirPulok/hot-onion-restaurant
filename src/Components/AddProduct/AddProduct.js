@@ -33,7 +33,7 @@ const AddProduct = () => {
             <h1>Add Product</h1>
             <button onClick={handleAddAllProdcut} className="btn btn-lg btn-info" disabled>Add All Product</button>
             <h1>Add Choose Us</h1>
-            <button onClick={handleAddAllChooseUS} className="btn btn-lg btn-info">Add All Choose Us</button>
+            <button onClick={handleAddAllChooseUS} className="btn btn-lg btn-info" disabled>Add All Choose Us</button>
         </div>
     );
 };

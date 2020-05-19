@@ -8,7 +8,7 @@ const ChooseUs = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
-        fetch('http://localhost:4000/chooseUs')
+        fetch('https://hot-onion-backend-pulok.herokuapp.com/chooseUs')
         .then(res=>res.json())
         .then(data=>
             {

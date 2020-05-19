@@ -10,7 +10,7 @@ const Product = (props) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
-        fetch("http://localhost:4000/products/"+selectedFood)
+        fetch("https://hot-onion-backend-pulok.herokuapp.com/products/"+selectedFood)
         .then(res=>res.json())
         .then(data=>{
             setFood(data);

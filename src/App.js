@@ -69,7 +69,7 @@ function App() {
         payment
     }
     console.log("App.js",order);
-    fetch('http://localhost:4000/placeOrder', {
+    fetch('https://hot-onion-backend-pulok.herokuapp.com/placeOrder', {
     method: 'POST',
     body: JSON.stringify(order),
     headers: {
